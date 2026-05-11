@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qualificação — MR Têxtil</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #111111;
+      --accent:  #B8935A;
+      --accent2: #D4AF7A;
+      --white:   #FFFFFF;
+      --bg:      #F7F6F3;
+      --card:    #FFFFFF;
+      --border:  #E0DDD8;
+      --gray:    #888;
+      --text:    #222;
+      --radius:  12px;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      background: var(--black);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--accent); }
+    .tagline {
+      font-size: 0.78rem;
+      color: #aaa;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Hero ────────────────────────────────────── */
+    .hero {
+      background: var(--black);
+      padding: 48px 32px 56px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p {
+      margin-top: 12px;
+      color: #bbb;
+      font-size: 1rem;
+      max-width: 480px;
+      margin-inline: auto;
+    }
+
+    /* ── Main ────────────────────────────────────── */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px 60px;
+      margin-top: -28px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      width: 100%;
+      max-width: 560px;
+      padding: 36px 40px;
+    }
+
+    /* ── Progress ────────────────────────────────── */
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 36px;
+    }
+    .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--gray);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s;
+      flex-shrink: 0;
+    }
+    .step-dot.active { background: var(--black); color: var(--white); }
+    .step-dot.done   { background: var(--accent); color: var(--white); }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .step-line.done { background: var(--accent); }
+
+    /* ── Step panels ─────────────────────────────── */
+    .step { display: none; animation: fadeIn .25s ease; }
+    .step.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .step h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+
+    /* ── Fields ──────────────────────────────────── */
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--black); }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+      -moz-appearance: textfield;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus { border-color: var(--accent); }
+
+    .field-group { margin-bottom: 20px; }
+
+    /* ── Divider ─────────────────────────────────── */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--gray);
+      font-size: 0.82rem;
+    }
+    .or-divider::before, .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Checkbox ────────────────────────────────── */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checkbox-row input[type="checkbox"] { display: none; }
+    .custom-check {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .checkbox-row input:checked + .custom-check {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .checkbox-row input:checked + .custom-check::after {
+      content: '';
+      width: 5px;
+      height: 9px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translateY(-1px);
+      display: block;
+    }
+    .checkbox-row span { font-size: 0.9rem; color: var(--text); }
+
+    /* ── Fabric cards ────────────────────────────── */
+    .fabric-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .fabric-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .fabric-card:hover { border-color: var(--accent2); background: #FDF9F3; }
+    .fabric-card.selected { border-color: var(--accent); background: #FDF7EE; }
+    .fabric-card input[type="radio"] { display: none; }
+    .fabric-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .fabric-card.selected .fabric-icon { background: #F0E6D4; }
+    .fabric-info { flex: 1; }
+    .fabric-name { font-size: 0.95rem; font-weight: 700; color: var(--black); margin-bottom: 2px; }
+    .fabric-desc { font-size: 0.8rem; color: var(--gray); line-height: 1.4; }
+    .fabric-radio-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .fabric-card.selected .fabric-radio-indicator {
+      border-color: var(--accent);
+    }
+    .fabric-card.selected .fabric-radio-indicator::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ── Qty helper ──────────────────────────────── */
+    .field-hint { font-size: 0.78rem; color: var(--gray); margin-top: 6px; }
+
+    /* ── Buttons ─────────────────────────────────── */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover  { background: #2a2a2a; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary.accent { background: var(--accent); }
+    .btn-primary.accent:hover { background: var(--accent2); }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: var(--gray);
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+    }
+    .btn-back:hover { color: var(--black); }
+
+    /* ── Error ───────────────────────────────────── */
+    .error-msg {
+      color: #c0392b;
+      font-size: 0.8rem;
+      margin-top: 6px;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+    input.invalid { border-color: #c0392b; }
+
+    /* ── Success ─────────────────────────────────── */
+    .success-screen {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #F0E6D4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 20px;
+    }
+    .success-screen h2 { font-size: 1.4rem; margin-bottom: 10px; color: var(--black); }
+    .success-screen p  { color: var(--gray); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      color: #bbb;
+    }
+
+    @media (max-width: 520px) {
+      header { padding: 16px 20px; }
+      .tagline { display: none; }
+      .card { padding: 28px 24px; }
+      .hero { padding: 36px 20px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MR <span>Têxtil</span></div>
+  <div class="tagline">Atacado · CNPJ Obrigatório</div>
+</header>
+
+<div class="hero">
+  <h1>Qualifique sua <em>empresa</em><br>e reserve malhas e tecidos</h1>
+  <p>Atendemos exclusivamente empresas com CNPJ. Responda 3 perguntas rápidas.</p>
+</div>
+
+<main>
+  <div class="card">
+
+    <!-- Progress indicator -->
+    <div class="progress" id="progressBar">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">3</div>
+    </div>
+
+    <!-- STEP 1 — CNPJ -->
+    <div class="step active" id="step1">
+      <div class="step-label">Passo 1 de 3</div>
+      <h2>Qual o CNPJ da sua empresa?</h2>
+
+      <div class="field-group">
+        <label for="cnpjInput">CNPJ</label>
+        <input type="text" id="cnpjInput" placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off" />
+        <div class="error-msg" id="cnpjError">Por favor, informe um CNPJ válido.</div>
+      </div>
+
+      <div class="or-divider">ou</div>
+
+      <label class="checkbox-row" for="noCnpj">
+        <input type="checkbox" id="noCnpj" />
+        <div class="custom-check"></div>
+        <span>Não possuo cadastro (CNPJ)</span>
+      </label>
+
+      <div style="margin-top: 28px;">
+        <button class="btn-primary" onclick="handleStep1()">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 — Fabric -->
+    <div class="step" id="step2">
+      <div class="step-label">Passo 2 de 3</div>
+      <h2>Qual tecido você procura?</h2>
+
+      <div class="fabric-grid" id="fabricGrid">
+        <label class="fabric-card" onclick="selectFabric(this)">
+          <input type="radio" name="fabric" value="Malha Canelada" />
+          <div class="fabric-icon">🧶</div>
+          <div class="fabric-info">
+            <div class="fabric-name">Malha Canelada</div>
+            <div class="fabric-desc">Alta elasticidade, conforto e versatilidade. Ideal para moda e uso diário.</div>
+          </div>
+          <div class="fabric-radio-indicator"></div>
+        </label>
+
+        <label class="fabric-card" onclick="selectFabric(this)">
+          <input type="radio" name="fabric" value="Moletinho" />
+          <div class="fabric-icon">🧵</div>
+          <div class="fabric-info">
+            <div class="fabric-name">Moletinho</div>
+            <div class="fabric-desc">Toque suave e levinho. Perfeito para moletons, agasalhos e peças casuais.</div>
+          </div>
+          <div class="fabric-radio-indicator"></div>
+        </label>
+
+        <label class="fabric-card" onclick="selectFabric(this)">
+          <input type="radio" name="fabric" value="Viscose Estampada" />
+          <div class="fabric-icon">✂️</div>
+          <div class="fabric-info">
+            <div class="fabric-name">Viscose Estampada</div>
+            <div class="fabric-desc">Caimento fluido com estampas exclusivas. Excelente para moda feminina.</div>
+          </div>
+          <div class="fabric-radio-indicator"></div>
+        </label>
+      </div>
+
+      <div class="error-msg visible" id="fabricError" style="display:none">Selecione um tipo de tecido para continuar.</div>
+
+      <button class="btn-primary" onclick="handleStep2()">Continuar →</button>
+      <button class="btn-back" onclick="goTo(1)">← Voltar</button>
+    </div>
+
+    <!-- STEP 3 — Quantity -->
+    <div class="step" id="step3">
+      <div class="step-label">Passo 3 de 3</div>
+      <h2>Qual a quantidade mínima que você precisa?</h2>
+
+      <div class="field-group">
+        <label for="qtyInput">Quantidade (metros ou kg)</label>
+        <input type="text" id="qtyInput" placeholder="Ex: 100 metros" autocomplete="off" />
+        <div class="field-hint">Informe a quantidade e a unidade (metros, quilos, rolos etc.)</div>
+        <div class="error-msg" id="qtyError">Por favor, informe a quantidade mínima.</div>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <button class="btn-primary accent" onclick="handleStep3()">Enviar qualificação</button>
+        <button class="btn-back" onclick="goTo(2)">← Voltar</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="step" id="stepSuccess">
+      <div class="success-screen">
+        <div class="success-icon">✓</div>
+        <h2>Qualificação enviada!</h2>
+        <p>
+          Recebemos suas informações.<br>
+          Em breve nossa equipe entrará em contato para dar continuidade ao seu pedido.
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /.card -->
+</main>
+
+<footer>© 2024 MR Têxtil · Atacado exclusivo para CNPJ</footer>
+
+<script>
+  // ── CNPJ mask ──────────────────────────────────
+  const cnpjInput = document.getElementById('cnpjInput');
+  cnpjInput.addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 14);
+    if (v.length > 12) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+    else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/, '$1.$2.$3/$4');
+    else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3})/, '$1.$2.$3');
+    else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3})/, '$1.$2');
+    this.value = v;
+  });
+
+  // Disable/enable CNPJ field when checkbox changes
+  document.getElementById('noCnpj').addEventListener('change', function () {
+    cnpjInput.disabled = this.checked;
+    cnpjInput.value    = this.checked ? '' : cnpjInput.value;
+    cnpjInput.classList.remove('invalid');
+    document.getElementById('cnpjError').classList.remove('visible');
+  });
+
+  // ── Navigation ─────────────────────────────────
+  let currentStep = 1;
+
+  function goTo(step) {
+    document.getElementById('step' + currentStep).classList.remove('active');
+    currentStep = step;
+    if (step === 'success') {
+      document.getElementById('stepSuccess').classList.add('active');
+      document.getElementById('progressBar').style.display = 'none';
+    } else {
+      document.getElementById('step' + step).classList.add('active');
+    }
+    updateProgress(step);
+  }
+
+  function updateProgress(step) {
+    if (step === 'success') step = 4;
+    [1, 2, 3].forEach(i => {
+      const dot  = document.getElementById('dot' + i);
+      const line = document.getElementById('line' + i);
+      dot.classList.remove('active', 'done');
+      if (i < step)       dot.classList.add('done');
+      else if (i === step) dot.classList.add('active');
+      if (line && i < step) line.classList.add('done');
+      else if (line)        line.classList.remove('done');
+    });
+  }
+
+  // ── Step 1 handler ─────────────────────────────
+  function handleStep1() {
+    const noCnpj = document.getElementById('noCnpj').checked;
+    if (noCnpj) {
+      window.location.href = 'cadastro.html';
+      return;
+    }
+    const raw = cnpjInput.value.replace(/\D/g, '');
+    if (!raw) {
+      cnpjInput.classList.add('invalid');
+      document.getElementById('cnpjError').innerText = 'Por favor, informe algum número.';
+      document.getElementById('cnpjError').classList.add('visible');
+      return;
+    }
+    cnpjInput.classList.remove('invalid');
+    document.getElementById('cnpjError').classList.remove('visible');
+    goTo(2);
+  }
+
+  // ── Step 2 handler ─────────────────────────────
+  function handleStep2() {
+    const selected = document.querySelector('.fabric-card.selected');
+    if (!selected) {
+      document.getElementById('fabricError').style.display = 'block';
+      return;
+    }
+    document.getElementById('fabricError').style.display = 'none';
+    goTo(3);
+  }
+
+  // ── Step 3 handler ─────────────────────────────
+  function handleStep3() {
+    const qty = document.getElementById('qtyInput').value.trim();
+    if (!qty) {
+      document.getElementById('qtyError').classList.add('visible');
+      return;
+    }
+    document.getElementById('qtyError').classList.remove('visible');
+    goTo('success');
+  }
+
+  // ── Fabric card selection ──────────────────────
+  function selectFabric(card) {
+    document.querySelectorAll('.fabric-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    card.querySelector('input[type="radio"]').checked = true;
+    document.getElementById('fabricError').style.display = 'none';
+  }
+
+  // ── CNPJ validator ─────────────────────────────
+  function validateCNPJ(c) {
+    if (c.length !== 14 || /^(\d)\1+$/.test(c)) return false;
+    const calc = (c, n) => {
+      let sum = 0, pos = n - 7;
+      for (let i = n; i >= 1; i--) {
+        sum += parseInt(c.charAt(n - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      const r = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+      return r === parseInt(c.charAt(n));
+    };
+    return calc(c, 12) && calc(c, 13);
+  }
+</script>
+</body>
+</html>
